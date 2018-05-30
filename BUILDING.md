@@ -80,6 +80,7 @@ Installation steps:
 3. Install Cairo: sudo apt-get install libcairo2-dev
 4. Install graphicsmagick: sudo apt-get install libgraphicsmagick1-dev
 5. Install libpng: sudo apt-get install libpng-dev
+6. Install CMake: sudo apt-get install cmake
 
 Example of CMake execution:
 ```
