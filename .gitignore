@@ -256,3 +256,18 @@ P0267_RefImpl/dll_Release
 *.db
 *.db-shm
 *.db-wal
+
+#################
+## Visual Studio Code
+#################
+.vscode
+
+#################
+## Vagrant (VM management software)
+#################
+.vagrant
+
+#################
+## JetBrains' IDEs
+#################
+.idea
