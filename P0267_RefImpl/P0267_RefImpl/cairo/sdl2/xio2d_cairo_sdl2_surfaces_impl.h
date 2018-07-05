@@ -158,7 +158,7 @@ namespace std::experimental::io2d {
                                 cairo_set_source_rgb(displayContext, 0.0, 0.0, 0.0);
                             }
                             else {
-                                auto pttn = data._Letterbox_brush.value().data().brush.get();
+                                auto pttn = data._Letterbox_brush->data().brush.get();
                                 if (data._Letterbox_brush_props == nullopt) {
                                     cairo_pattern_set_extend(pttn, CAIRO_EXTEND_NONE);
                                     cairo_pattern_set_filter(pttn, CAIRO_FILTER_GOOD);
@@ -168,7 +168,7 @@ namespace std::experimental::io2d {
                                     cairo_set_source(displayContext, pttn);
                                 }
                                 else {
-                                    const auto& props = data._Letterbox_brush_props.value();
+                                    const auto& props = *(data._Letterbox_brush_props);
                                     cairo_pattern_set_extend(pttn, _Extend_to_cairo_extend_t(props.wrap_mode()));
                                     cairo_pattern_set_filter(pttn, _Filter_to_cairo_filter_t(props.filter()));
                                     cairo_matrix_t cPttnMatrix;
@@ -208,7 +208,7 @@ namespace std::experimental::io2d {
                                 //cairo_paint(_Native_context.get());
                             }
                             else {
-                                auto pttn = data._Letterbox_brush.value().data().brush.get();
+                                auto pttn = data._Letterbox_brush->data().brush.get();
                                 if (data._Letterbox_brush_props == nullopt) {
                                     cairo_pattern_set_extend(pttn, CAIRO_EXTEND_NONE);
                                     cairo_pattern_set_filter(pttn, CAIRO_FILTER_GOOD);
@@ -219,7 +219,7 @@ namespace std::experimental::io2d {
                                     //cairo_paint(_Native_context.get());
                                 }
                                 else {
-                                    const auto& props = data._Letterbox_brush_props.value();
+                                    const auto& props = *(data._Letterbox_brush_props);
                                     cairo_pattern_set_extend(pttn, _Extend_to_cairo_extend_t(props.wrap_mode()));
                                     cairo_pattern_set_filter(pttn, _Filter_to_cairo_filter_t(props.filter()));
                                     cairo_matrix_t cPttnMatrix;

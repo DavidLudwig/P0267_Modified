@@ -43,7 +43,7 @@ namespace std::experimental::io2d {
 					cairo_set_fill_rule(context, _Fill_rule_to_cairo_fill_rule_t(props.fr));
 					cairo_new_path(context);
 
-					cairo_append_path(context, props.clip.value().data().path.get());
+					cairo_append_path(context, props.clip->data().path.get());
 					cairo_clip(context);
 					// Restore saved state
 					cairo_set_fill_rule(context, fr);
