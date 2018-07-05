@@ -188,6 +188,13 @@ target_include_directories(io2d_cairo_sdl2 SYSTEM PUBLIC
 	"${CMAKE_CURRENT_SOURCE_DIR}/external/cairo/src"
 	"${CMAKE_CURRENT_SOURCE_DIR}/external/pixman/pixman"
 )
+if(CMAKE_GENERATOR MATCHES "^Xcode$")
+	# On some versions of Xcode, parts of libc++ are buggy.  Use a minimum set of alternatives
+	# TODO(dludwig@pobox.com): check for a compatible libc++, rather than a blanket 'always on Xcode'.  Even an Xcode version check -might- be valid and better.
+	target_include_directories(io2d_cairo_sdl2 SYSTEM PUBLIC
+		"${CMAKE_CURRENT_SOURCE_DIR}/external/libcxx-compat-fixes-for-xcode"
+	)
+endif()
 
 if(USE_DEVELOPMENT_SDL2)
 	set(SDL2_INCLUDE_DIRS "${USE_DEVELOPMENT_SDL2}/include/SDL2")
