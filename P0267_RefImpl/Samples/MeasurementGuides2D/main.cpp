@@ -10,13 +10,13 @@ static output_surface & display() {
 }
 
 template <typename Surface>
-void add_guides(path_builder & pb, Surface & surface) {
-    // Configure-ables
-    const float small_tick_size = 5.f;
-    const int   small_tick_increment = 50;
-    const float big_tick_size = 15.f;
-    // big ticks are 2x the size of small ticks
-
+void add_guides(
+    path_builder & pb,
+    Surface & surface,
+    const float length_small = 5.f,     // length of small ticks
+    const float length_large = 15.f,    // length of big ticks
+    const int spacing = 50              // length in-between ticks
+) {
     // Make note of the surface's dimension
     const float w = (float) surface.dimensions().x();
     const float h = (float) surface.dimensions().y();
@@ -27,22 +27,22 @@ void add_guides(path_builder & pb, Surface & surface) {
     pb.rel_line({w, 0});
 
     // Add tick-marks along the x axis
-    for (int x = 0; x < w; x += small_tick_increment) {
+    for (int x = 0; x < w; x += spacing) {
         pb.new_figure({(float)x, 0});
-        if ((x % (small_tick_increment * 2)) == 0) {
-            pb.rel_line({0, big_tick_size});
+        if ((x % (spacing * 2)) == 0) {
+            pb.rel_line({0, length_large});
         } else {
-            pb.rel_line({0, small_tick_size});
+            pb.rel_line({0, length_small});
         }
     }
 
     // Add tick-marks along the y axis
-    for (int y = 0; y < w; y += small_tick_increment) {
+    for (int y = 0; y < w; y += spacing) {
         pb.new_figure({0, (float)y});
-        if ((y % (small_tick_increment * 2)) == 0) {
-            pb.rel_line({big_tick_size, 0});
+        if ((y % (spacing * 2)) == 0) {
+            pb.rel_line({length_large, 0});
         } else {
-            pb.rel_line({small_tick_size, 0});
+            pb.rel_line({length_small, 0});
         }
     }
 
