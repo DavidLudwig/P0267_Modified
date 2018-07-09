@@ -1,4 +1,4 @@
-//#include "io2d.h"
+#include "io2d.h"
 #include "xcairo.h"
 #include "xio2d_cairo_sdl2_main.h"
 #include "xgraphicsmathfloat.h"
@@ -13,17 +13,38 @@
 
 namespace std::experimental::io2d {
 	inline namespace v1 {
+        output_surface * default_output_surface() {
+			static output_surface s = output_surface {512, 512, format::argb32, scaling::none, refresh_style::as_fast_as_possible, 60.f};
+			return &s;
+		}
+
+		void run(std::function<void(output_surface &)> update) {
+			auto surface = default_output_surface();
+			if (surface) {	// TODO(dludwig@pobox.com): what should we do if surface is empty?
+				run(*surface, update);
+			}
+		}
+
+		void run(output_surface &surface, std::function<void(output_surface &)> update) {
+			surface.size_change_callback([](output_surface &_surface) {
+				_surface.dimensions(_surface.display_dimensions());
+			});
+			surface.draw_callback(update);
+			surface.begin_show();
+		}
+
 		namespace _Cairo {
 			using _Output_surface_datadata = _Cairo_graphics_surfaces<std::experimental::io2d::v1::_Graphics_math_float_impl>::surfaces::output_surface_data_type;
 			using _Output_surface = basic_output_surface<_Cairo_graphics_surfaces<std::experimental::io2d::v1::_Graphics_math_float_impl>>;
 
+
 			template <>
 			void _Create_display_surface_and_context<std::experimental::io2d::v1::_Graphics_math_float_impl>(_Cairo_graphics_surfaces<std::experimental::io2d::v1::_Graphics_math_float_impl>::surfaces::_Display_surface_data_type& data)
 			{
-                data.display_surface = ::std::move(::std::unique_ptr<cairo_surface_t, decltype(&cairo_surface_destroy)>(cairo_image_surface_create(CAIRO_FORMAT_ARGB32, data.display_dimensions.x(), data.display_dimensions.y()), &cairo_surface_destroy));
+                data.display_surface = ::std::unique_ptr<cairo_surface_t, decltype(&cairo_surface_destroy)>(cairo_image_surface_create(CAIRO_FORMAT_ARGB32, data.display_dimensions.x(), data.display_dimensions.y()), &cairo_surface_destroy);
                 auto sfc = data.display_surface.get();
                 _Throw_if_failed_cairo_status_t(cairo_surface_status(sfc));
-                data.display_context = ::std::move(::std::unique_ptr<cairo_t, decltype(&cairo_destroy)>(cairo_create(sfc), &cairo_destroy));
+                data.display_context = ::std::unique_ptr<cairo_t, decltype(&cairo_destroy)>(cairo_create(sfc), &cairo_destroy);
                 _Throw_if_failed_cairo_status_t(cairo_status(data.display_context.get()));
 
                 if (data.texture) {
@@ -249,7 +270,7 @@ namespace std::experimental::io2d {
 
 				const auto desiredElapsed = 1'000'000'000.0F / data.refresh_fps;
 				if (data.rr == io2d::refresh_style::fixed) {
-                    #if __EMSCRIPTEN__
+#if __EMSCRIPTEN__
 						// TODO(dludwig@pobox.com): consider redeclaring the above 'if __EMSCRIPTEN__' to 'if use_external_runloop'
 						redraw = true;
                     #else
@@ -333,7 +354,7 @@ namespace std::experimental::io2d {
 				data._Default_letterbox_brush = basic_brush<_Cairo_graphics_surfaces>(rgba_color::black);
 				data._Letterbox_brush = data._Default_letterbox_brush;
 
-				data.back_buffer = ::std::move(create_image_surface(data.back_buffer.format, data.back_buffer.dimensions.x(), data.back_buffer.dimensions.y()));
+				data.back_buffer = create_image_surface(data.back_buffer.format, data.back_buffer.dimensions.x(), data.back_buffer.dimensions.y());
 
 				data.elapsed_draw_time = 0.0f;
 				data.previous_time = decltype(data.previous_time)();	// reset to epoch

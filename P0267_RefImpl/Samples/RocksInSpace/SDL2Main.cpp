@@ -25,16 +25,12 @@ void rocks_in_space::get_key_states()
     press() = { get(anti_clockwise_key), get(clockwise_key), get(thrust_key), get(fire_key), get(hyperspace_key)};
 }
 
-static auto & display() {
-    static output_surface display{ 640, 480, format::argb32, scaling::letterbox, refresh_style::fixed, 60.0f };
-    return display;
-}
-
-static rocks_in_space::game game;
-
 int main(int argc, const char * argv[])
 {
-    display().draw_callback([&](output_surface& os) { game.update<output_surface>(os); });
-    display().begin_show();
+    static output_surface display{ 640, 480, format::argb32, scaling::letterbox, refresh_style::fixed, 60.0f };
+    static rocks_in_space::game game;
+    run([&](display, auto &surface) {
+        game.update(surface);
+    });
     return 0;
 }

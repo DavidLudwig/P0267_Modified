@@ -11,6 +11,8 @@
 //#include "io2d_cairo_sdl2_unmanaged_output_surfaces.h"
 //#include "io2d_cairo_sdl2_surfaces_impl.h"
 
+#include <functional>
+
 #include "io2d_cairo_sdl2.h"
 
 namespace std::experimental::io2d {
@@ -36,6 +38,11 @@ namespace std::experimental::io2d {
         using render_props = basic_render_props<default_graphics_surfaces>;
         using stroke_props = basic_stroke_props<default_graphics_surfaces>;
         using unmanaged_output_surface = basic_unmanaged_output_surface<default_graphics_surfaces>;
+
+        output_surface * default_output_surface();
+        // TODO(dludwig@pobox.com): consider returning an int, to help facilitate a direct return from main()
+        void run(std::function<void (output_surface &)> update);
+        void run(output_surface & surface, std::function<void (output_surface &)> update);
     }
 }
 #endif
