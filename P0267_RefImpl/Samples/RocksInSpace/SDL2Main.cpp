@@ -29,7 +29,7 @@ int main(int argc, const char * argv[])
 {
     static output_surface display{ 640, 480, format::argb32, scaling::letterbox, refresh_style::fixed, 60.0f };
     static rocks_in_space::game game;
-    run([&](display, auto &surface) {
+    run(display, [&](auto &surface) {
         game.update(surface);
     });
     return 0;
