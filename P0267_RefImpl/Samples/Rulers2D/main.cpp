@@ -16,27 +16,16 @@ static output_surface & display() {
 #include "io2d_rulers.h"
 
 int main(int argc, const char *argv[]) {
-    try {
-        auto &d = display();
-        d.size_change_callback([&](output_surface &surface) {
-            surface.dimensions(surface.display_dimensions());
-        });
-        d.draw_callback([&](auto &surface) {
-            // Draw background
-            brush bg_color {rgba_color::black};
-            surface.paint(bg_color);
+    run([](output_surface &surface) {
+        // Draw background
+        brush bg_color {rgba_color::black};
+        surface.paint(bg_color);
 
-            // Draw rulers
-            path_builder pb;
-            add_rulers_for_surface(pb, surface);    // this function is found in the included file, io2d_guides.h
-            const brush ruler_color {rgba_color::white};
-            surface.stroke(ruler_color, pb);
-        });
-        d.begin_show();
-    } catch (const std::exception &ex) {
-        printf("std::exception caught, what=\"%s\"\n", ex.what());
-    } catch (...) {
-        printf("unknown exception caught\n");
-    }
+        // Draw rulers
+        path_builder pb;
+        add_rulers_for_surface(pb, surface);    // this function is found in the included file, io2d_guides.h
+        const brush ruler_color {rgba_color::white};
+        surface.stroke(ruler_color, pb);
+    });
     return 0;
 }
